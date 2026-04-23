@@ -1,0 +1,44 @@
+# Evaluated Methods
+methods:
+  - "selective_context"
+  - "llmlingua"
+  - "llmlingua2"
+  - "longllmlingua"
+  - "cpc"
+  - "ours"
+
+# Evaluation Settings
+datasets:
+  - "longbench"
+  - "zeroscrolls"
+
+token_budgets:
+  - 2000
+  - 3000
+
+# Model Settings & Paths
+models:
+  # Target LLM
+  mistral_7b:
+    path: "mistralai/Mistral-7B-Instruct-v0.2"
+    temperature: 0.0
+    max_new_tokens: 256
+    device: "auto"
+
+  # Compressor Components
+  llmlingua:
+    path: "yahma/llama-7b-hf"
+    device: "auto"
+  
+  llmlingua2:
+    path: "microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank"
+    device: "cpu"  
+  
+  cpc:
+    path: "BAAI/bge-reranker-base"
+    device: "auto"
+
+  ours:
+    cross_encoder_path: "BAAI/bge-reranker-base"
+    xgb_model_path: "../data/xgboost_fusion.json"  
+    llmlingua2_path: "microsoft/llmlingua-2-bert-base-multilingual-cased-meetingbank"

@@ -1,0 +1,37 @@
+target_llm: "llama3.2:3b"
+mistral_model_path: ""
+
+token_budgets: [2000, 3000]
+
+datasets:
+  longbench:
+    enabled: true
+    tasks:
+      - narrativeqa
+      - qasper
+      - multifieldqa_en
+      - hotpotqa
+      - 2wikimqa
+      - musique
+      - gov_report
+      - qmsum
+      - multi_news
+      - trec
+      - triviaqa
+      - samsum
+      - passage_count
+      - passage_retrieval_en
+      - lcc
+      - repobench-p
+
+methods:
+  - selective_context
+  - llmlingua
+  - llmlingua2
+  - longllmlingua
+  - cpc
+  - ours
+
+db:
+  path: "results.db"
+  type: "sqlite"
