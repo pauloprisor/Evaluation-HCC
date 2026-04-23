@@ -10,7 +10,6 @@ from typing import Tuple
 
 from .base import BaseMethod, count_tokens
 
-# Aducem dependințele din librăria veche fără să o alterăm
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 from hcc.core.utils import split_sentences
 from hcc.core.cpc_base import ContextAwareScore

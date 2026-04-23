@@ -7,7 +7,6 @@ from typing import Tuple
 
 from .base import BaseMethod, count_tokens
 
-# Înregistrăm dinamic folderul 'cpc_repo' ca modul Python pentru ca librăria să își poată apela intern modulele ('model', 'util', etc)
 cpc_repo_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', 'cpc_repo')
 if os.path.abspath(cpc_repo_path) not in sys.path:
     sys.path.insert(0, os.path.abspath(cpc_repo_path))
@@ -18,7 +17,6 @@ try:
 except ImportError as e:
     PromptCompressorCPC = None
     ModelType = None
-    # Lăsăm eroarea liberă pentru momentul inițializării
 
 
 class CPCCompressorMethod(BaseMethod):
@@ -26,10 +24,10 @@ class CPCCompressorMethod(BaseMethod):
         if PromptCompressorCPC is None:
             raise ImportError("CPC repository or its internal dependencies could not be loaded. Ensure it sits in Evaluation-HCC/cpc_repo")
             
-        print("[CPC] Setup: Loading CPC architecture (LLaMA-1B)...")
+        print("[CPC] Setup: Loading CPC architecture")
     
         self.compressor = PromptCompressorCPC(
-            model_type=ModelType.LLAMA,
+            model_type=ModelType.MISTRAL,
             use_question_as_suffix=False,
             use_openai_tokenizer_to_measure_length=True
         )

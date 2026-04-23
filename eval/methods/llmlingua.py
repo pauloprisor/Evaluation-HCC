@@ -15,8 +15,7 @@ class LLMLingua1Compressor(BaseMethod):
         if PromptCompressor is None:
             raise ImportError("Please install llmlingua package first.")
         
-        # Forțăm CPU pentru LLMLingua v1 (evită erorile de 'Invalid buffer size' pe MPS la contexte lungi)
-        self.device = "cpu"
+        self.device = "cuda"
         hf_id = "Qwen/Qwen2.5-0.5B"
         
         print(f"[LLMLingua-1] Setup: Loading SLM {hf_id} on {self.device}...")

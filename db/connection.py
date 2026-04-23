@@ -12,13 +12,11 @@ def initialize_schema():
         conn.commit()
 
 def get_connection() -> sqlite3.Connection:
-    """Returnează o conexiune SQLite la results.db. Inițializează schema dacă fișierul nu există."""
     needs_init = not os.path.exists(DB_PATH)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     
     if needs_init:
-        # Avoid recursive calls but do it cleanly
         with open(SCHEMA_PATH, 'r') as f:
             schema = f.read()
         conn.executescript(schema)

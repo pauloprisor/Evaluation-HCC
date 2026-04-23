@@ -52,7 +52,6 @@ class LLMLingua2Compressor(BaseMethod):
         
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
-            # LLMLingua-2 aruncă textul direct prin BERT token classify
             result = self.compressor.compress_prompt(
                 context=context,
                 rate=target_ratio,
