@@ -16,7 +16,7 @@ class LLMLingua1Compressor(BaseMethod):
             raise ImportError("Please install llmlingua package first.")
         
         self.device = "cuda"
-        hf_id = "Qwen/Qwen2.5-0.5B"
+        hf_id = "deepseek-ai/deepseek-llm-7b-base"
         
         print(f"[LLMLingua-1] Setup: Loading SLM {hf_id} on {self.device}...")
         self.compressor = PromptCompressor(

@@ -22,7 +22,7 @@ class LongLLMLinguaCompressor(BaseMethod):
         else:
             self.device = "cpu"
             
-        hf_model_id = "meta-llama/Llama-2-7b-chat-hf"
+        hf_model_id = "deepseek-ai/deepseek-llm-7b-base"
         
         print(f"[LongLLMLingua] Setup: Loading SLM {hf_model_id} pe {self.device}...")
         self.compressor = PromptCompressor(

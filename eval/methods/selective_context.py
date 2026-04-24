@@ -23,7 +23,7 @@ class SelectiveContextMethod(BaseMethod):
             device = "cpu"
         
         self.sc = SelectiveContext(
-            model_type='gpt2', 
+            model_type='deepseek-ai/deepseek-llm-7b-base', 
             lang='en',
             device=device
         )
