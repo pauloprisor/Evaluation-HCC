@@ -9,6 +9,7 @@ from eval.run_evaluation import (
     METHOD_REGISTRY, 
     DATASETS, 
     DATASET2MAXLEN,
+    DATASET2PROMPT,
     scorer
 )
 from eval.llm import LlamaLLM
@@ -60,6 +61,7 @@ def main():
             
             # LongBench config for generation length
             max_new_tokens = DATASET2MAXLEN.get(task, 128)
+            prompt_format = DATASET2PROMPT.get(task, "Context: {context}\n\nQuestion: {input}\n\nAnswer:")
 
             for comp in tqdm(pending, desc=f"LLM {task}"):
                 sample_id = comp["sample_id"]
@@ -68,10 +70,12 @@ def main():
                 if is_sample_done(exp_id, sample_id):
                     continue
 
-                # Prepare prompt
-                # Note: Assuming prompt format is fixed or we can extract it
-                # For now using a simple context + question format
-                prompt = f"Context: {comp['compressed_context']}\n\nQuestion: {comp['question']}\n\nAnswer:"
+                # Prepare prompt using official format
+                try:
+                    prompt = prompt_format.format(context=comp['compressed_context'], input=comp['question'])
+                except Exception:
+                    # Fallback if keys don't match exactly
+                    prompt = f"Context: {comp['compressed_context']}\n\nQuestion: {comp['question']}\n\nAnswer:"
                 
                 try:
                     response, _, llm_lat = llm.generate(prompt, max_new_tokens=max_new_tokens)
