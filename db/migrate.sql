@@ -1,14 +1,4 @@
--- db/schema.sql
-
-CREATE TABLE IF NOT EXISTS experiments (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    method_name TEXT NOT NULL,
-    task_name TEXT NOT NULL,
-    token_budget INTEGER NOT NULL,
-    target_llm TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    completed BOOLEAN DEFAULT FALSE
-);
+-- db/migrate.sql
 
 CREATE TABLE IF NOT EXISTS compressions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -23,16 +13,6 @@ CREATE TABLE IF NOT EXISTS compressions (
     compressed_context TEXT,
     metric_name TEXT NOT NULL,
     compression_latency_ms INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
-CREATE TABLE IF NOT EXISTS results (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    experiment_id INTEGER REFERENCES experiments(id),
-    sample_id TEXT NOT NULL,
-    llm_response TEXT,
-    score REAL,
-    latency_ms INTEGER,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

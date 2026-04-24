@@ -15,8 +15,8 @@ from db.connection import get_connection
 from db.operations import (
     create_experiment,
     save_result,
+    get_aggregated_results,
     is_sample_done,
-    experiment_exists,
 )
 from eval.llm import LlamaLLM
 
@@ -70,6 +70,9 @@ DATASET2METRIC = {
     "lcc": "code_sim",
     "repobench-p": "code_sim",
 }
+
+DATASETS = list(DATASET2METRIC.keys())
+
 
 METHOD_REGISTRY = {
     "baseline": BaselineMethod,
@@ -135,16 +138,29 @@ def get_experiment_id(method_name: str, task: str, token_budget: int, config: di
     )
 
 
+def load_task_data(task: str):
+    data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
+    if not os.path.exists(data_path):
+        print(f"[ERROR] Fisierul local {data_path} nu exista. Ruleaza download_longbench.py intai.")
+        return []
+    
+    data = []
+    with open(data_path, "r", encoding="utf-8") as f:
+        for line in f:
+            data.append(json.loads(line))
+    return data
+
+
 def run_task(method_instance, method_name: str, task: str,
              token_budget: int, limit, llm: LlamaLLM, config: dict):
     print(f"\n{'='*60}")
     print(f"Method: {method_name} | Task: {task} | Budget: {token_budget}")
     print(f"{'='*60}")
 
-    data_path = os.path.join(ROOT, "data", f"{task}.jsonl")
-    if not os.path.exists(data_path):
-        print(f"[ERROR] Fisierul local {data_path} nu exista. Ruleaza download_longbench.py intai.")
+    data = load_task_data(task)
+    if not data:
         return
+
     with open(data_path, encoding="utf-8") as f:
         data = [json.loads(line) for line in f if line.strip()]
 

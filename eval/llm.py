@@ -16,7 +16,7 @@ class LlamaLLM:
         self,
         prompt: str,
         max_new_tokens: int = 128,
-        temperature: float = 0.1
+        temperature: float = 0.0
     ) -> tuple[str, int, float]:
 
         t0 = time.time()
