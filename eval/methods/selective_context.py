@@ -23,9 +23,8 @@ class SelectiveContextMethod(BaseMethod):
             device = "cpu"
         
         self.sc = SelectiveContext(
-            model_type='deepseek-ai/deepseek-llm-7b-base', 
+            model_type='gpt2', 
             lang='en',
-            device=device
         )
         self._tokenizer = self.sc.tokenizer
 

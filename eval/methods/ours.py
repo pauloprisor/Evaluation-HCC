@@ -18,9 +18,6 @@ from hcc.core.llmlingua import LLMLingua
 
 class OursCompressor(BaseMethod):
     def __init__(self, **kwargs):
-        print("[Ours Setup] Loading BGE Reranker...")
-        self.scorer = ContextAwareScore(model_name="BAAI/bge-reranker-base")
-        
         print("[Ours Setup] Loading XGBoost Model...")
         self.meta_classifier = xgb.XGBClassifier()
         script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -32,6 +29,9 @@ class OursCompressor(BaseMethod):
         except Exception:
             self.xgb_loaded = False
             warnings.warn(f"XGBoost model not loaded from {xgb_path}!")
+
+        print("[Ours Setup] Loading BGE Reranker...")
+        self.scorer = ContextAwareScore(model_name="BAAI/bge-reranker-base")
 
         print("[Ours Setup] Loading LLMLingua-2...")
         self.generative = LLMLingua(target_ratio=0.5)

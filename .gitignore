@@ -7,3 +7,6 @@ results/
 results.db
 *.code-workspace
 zeroscrolls/
+cpc_venv/
+cpc_server_run.log
+cpc_venv/

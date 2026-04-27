@@ -1,11 +1,11 @@
 import sys
 import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 import json
 import argparse
 import yaml
 from tqdm import tqdm
 import gc
-import torch
 
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -20,13 +20,7 @@ from db.operations import (
 )
 from eval.llm import LlamaLLM
 
-from eval.methods.baseline import BaselineMethod
-from eval.methods.ours import OursCompressor
-from eval.methods.llmlingua import LLMLingua1Compressor
-from eval.methods.llmlingua2 import LLMLingua2Compressor
-from eval.methods.longllmlingua import LongLLMLinguaCompressor
-from eval.methods.selective_context import SelectiveContextMethod
-from eval.methods.cpc import CPCCompressorMethod
+
 
 from eval.methods.base import count_tokens
 
@@ -74,14 +68,40 @@ DATASET2METRIC = {
 DATASETS = list(DATASET2METRIC.keys())
 
 
+def get_method_class(method_name):
+    if method_name == "baseline":
+        from eval.methods.baseline import BaselineMethod
+        return BaselineMethod
+    elif method_name == "ours":
+        import xgboost as xgb
+        from eval.methods.ours import OursCompressor
+        return OursCompressor
+    elif method_name == "llmlingua":
+        from eval.methods.llmlingua import LLMLingua1Compressor
+        return LLMLingua1Compressor
+    elif method_name == "llmlingua2":
+        from eval.methods.llmlingua2 import LLMLingua2Compressor
+        return LLMLingua2Compressor
+    elif method_name == "longllmlingua":
+        from eval.methods.longllmlingua import LongLLMLinguaCompressor
+        return LongLLMLinguaCompressor
+    elif method_name == "selective_context":
+        from eval.methods.selective_context import SelectiveContextMethod
+        return SelectiveContextMethod
+    elif method_name == "cpc":
+        from eval.methods.cpc import CPCCompressorMethod
+        return CPCCompressorMethod
+    else:
+        return None
+
 METHOD_REGISTRY = {
-    "baseline": BaselineMethod,
-    "ours": OursCompressor,
-    "llmlingua": LLMLingua1Compressor,
-    "llmlingua2": LLMLingua2Compressor,
-    "longllmlingua": LongLLMLinguaCompressor,
-    "selective_context": SelectiveContextMethod,
-    "cpc": CPCCompressorMethod,
+    "baseline": lambda: get_method_class("baseline")(),
+    "ours": lambda: get_method_class("ours")(),
+    "llmlingua": lambda: get_method_class("llmlingua")(),
+    "llmlingua2": lambda: get_method_class("llmlingua2")(),
+    "longllmlingua": lambda: get_method_class("longllmlingua")(),
+    "selective_context": lambda: get_method_class("selective_context")(),
+    "cpc": lambda: get_method_class("cpc")(),
 }
 
 
@@ -262,6 +282,7 @@ def unload_method(method_instance, method_name: str):
     print(f"  Unloading {method_name} from memory...")
     del method_instance
     gc.collect()
+    import torch
     if torch.cuda.is_available():
         torch.cuda.empty_cache()
     elif torch.backends.mps.is_available():

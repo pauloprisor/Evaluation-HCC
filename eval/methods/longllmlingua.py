@@ -22,7 +22,7 @@ class LongLLMLinguaCompressor(BaseMethod):
         else:
             self.device = "cpu"
             
-        hf_model_id = "deepseek-ai/deepseek-llm-7b-base"
+        hf_model_id = "gpt2"
         
         print(f"[LongLLMLingua] Setup: Loading SLM {hf_model_id} pe {self.device}...")
         self.compressor = PromptCompressor(
@@ -53,22 +53,17 @@ class LongLLMLinguaCompressor(BaseMethod):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             result = self.compressor.compress_prompt(
-                context=context,
+                [context],
                 instruction="",
                 question=question,
                 target_token=token_budget,
                 rank_method="longllmlingua",
-                
-                k=2, 
-                compression_ratio_instruction=0.85,
-                compression_ratio_question=0.9,
-                segment_size=200,
-                delta_tau=0.3,
-                
+                iterative_size=200,                    # segment_size din paper
                 condition_in_question="after_condition",
                 reorder_context="sort",
-                dynamic_context_compression=True,
+                dynamic_context_compression_ratio=0.3, # δτ din paper
                 condition_compare=True,
+                token_budget_ratio=1.4,
             )
         
         compressed_text = result["compressed_prompt"]

@@ -37,7 +37,11 @@ def main():
 
     # Resolve tasks
     if not args.tasks or "all" in args.tasks:
-        tasks_to_run = config.get("datasets", DATASETS)
+        datasets_cfg = config.get("datasets", {})
+        if isinstance(datasets_cfg, dict) and "longbench" in datasets_cfg:
+            tasks_to_run = datasets_cfg["longbench"].get("tasks", DATASETS)
+        else:
+            tasks_to_run = DATASETS
     else:
         tasks_to_run = args.tasks
 

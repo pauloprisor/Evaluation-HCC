@@ -15,8 +15,8 @@ class LLMLingua1Compressor(BaseMethod):
         if PromptCompressor is None:
             raise ImportError("Please install llmlingua package first.")
         
-        self.device = "cuda"
-        hf_id = "deepseek-ai/deepseek-llm-7b-base"
+        self.device = "mps"
+        hf_id = "gpt2"
         
         print(f"[LLMLingua-1] Setup: Loading SLM {hf_id} on {self.device}...")
         self.compressor = PromptCompressor(
@@ -50,7 +50,7 @@ class LLMLingua1Compressor(BaseMethod):
         with warnings.catch_warnings():
             warnings.simplefilter("ignore")
             result = self.compressor.compress_prompt(
-                context=context,
+                context = context,
                 instruction="", 
                 question=question, 
                 target_token=token_budget,

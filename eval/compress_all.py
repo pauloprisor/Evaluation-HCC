@@ -2,8 +2,8 @@
 import argparse
 import yaml
 import os
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
 import gc
-import torch
 from tqdm import tqdm
 from typing import List
 
@@ -106,16 +106,19 @@ def main():
                         compression_latency_ms=comp_lat
                     )
                 except Exception as e:
+                    import traceback
                     print(f"\n[ERROR] Compression failed for {sample_id}: {e}")
+                    traceback.print_exc()
 
         # Cleanup after each method to free VRAM
         print(f"🧹 Unloading {method_name} and clearing GPU cache...")
         del method_instance
         gc.collect()
+        import torch
         if torch.cuda.is_available():
             torch.cuda.empty_all_cache() if hasattr(torch.cuda, 'empty_all_cache') else torch.cuda.empty_cache()
 
-    print("\n✅ Stage 1 Complete. Check 'compressions' table in DB.")
+    print("\n Stage 1 Complete. Check 'compressions' table in DB.")
 
 if __name__ == "__main__":
     main()

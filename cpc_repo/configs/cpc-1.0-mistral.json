@@ -20,7 +20,7 @@
     "lora_r": 16,
     "gradient_checkpointing": true,
     "torch_dtype": "bfloat16",
-    "attn_implementation": "flash_attention_2",
+    "attn_implementation": "sdpa",
     "logging_strategy": "steps",
     "logging_steps": 50,
     "max_steps": 132,

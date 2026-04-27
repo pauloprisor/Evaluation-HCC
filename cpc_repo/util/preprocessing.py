@@ -137,7 +137,6 @@ class SamplePreprocessor:
                 segments=chunk,
                 segments_labels=chunk_labels,
                 max_seq_len=self.max_context_len,
-                sentence_embedding_type=self.sentence_embedding_type,
                 end_of_sentence_token=end_of_sent_token_id
             )
             for chunk, chunk_labels in zip(chunks, chunks_labels)

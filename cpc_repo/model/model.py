@@ -64,7 +64,11 @@ def load_model_and_tokenizer(config_path, tokenizer_name_or_path, lora_name_or_p
 
     model.model = PeftModel.from_pretrained(model.model, lora_name_or_path)
 
-    model = model.cuda()
+    import torch
+    if torch.cuda.is_available():
+        model = model.cuda()
+    elif torch.backends.mps.is_available():
+        model = model.to('mps')
 
     # model.model = model.model.merge_and_unload()
 
